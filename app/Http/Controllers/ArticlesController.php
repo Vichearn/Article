@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Redirect;
 use App\Article;
+use File;
 use Session;
 
 class ArticlesController extends Controller
@@ -29,8 +30,6 @@ class ArticlesController extends Controller
             'title'         => 'required',
             'descriptions'  => 'required',
             'image_file'    => 'required'
-            //'created_at'    => 'required',
-            //'updated_at'    => 'required'
         );
         $validator = Validator::make(Input::all(), $rules);
 
@@ -74,10 +73,7 @@ class ArticlesController extends Controller
         $rules = array(
             'title'         => 'required',
             'descriptions'  => 'required',
-            'image_name'    => 'required',
-            'image_file'    => 'required',
-            'created_at'    => 'required',
-            'updated_at'    => 'required'
+            'image_file'    => 'required'
         );
         $validator = Validator::make(Input::all(), $rules);
 
@@ -86,16 +82,15 @@ class ArticlesController extends Controller
                 ->withErrors($validator);
         } else {
             $article = Article::find($id);
-            $article->title       = Input::get('title');
-            $article->text        = Input::get('descriptions');
-            $article->image_name  = Input::get('image_file');
-            /*if(Input::hasFile('image')){
-                $file = Input::file('image');
-                $file->move(public_path(). '/', $file->getClientOriginalName());
-                    article->image_file = $file->getClientOriginalName();
-                    article->image_type = $file->getClientMimeType();
-                    article->image_size = $file->getClientSize();
-            }*/
+            $article->title         = Input::get('title');
+            $article->descriptions  = Input::get('descriptions');
+            if(Input::hasFile('image_file')){
+                $file = Input::file('image_file');
+                $file->move(public_path(). '/images', $file->getClientOriginalName());
+                    $article->image_file = $file->getClientOriginalName();
+                    $article->image_type = $file->getClientMimeType();
+                    $article->image_size = $file->getClientSize();
+            }
             $article->created_at  = Input::get('created_at');
             $article->updated_at  = Input::get('updated_at');
             $article->save();
@@ -108,6 +103,7 @@ class ArticlesController extends Controller
     public function destroy($id)
     {
         $article = Article::find($id);
+        File::delete('images/' . $article->image_file);
         $article->delete();
 
         Session::flash('message', 'Successfully deleted the Article!');

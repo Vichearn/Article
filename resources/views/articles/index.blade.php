@@ -22,7 +22,6 @@
                             <td>Image</td>
                             <td>Image Type</td>
                             <td>Image Size</td>
-                            <td>Created Date</td>
                             <td>Update Datde</td>
                             <td>Actions</td>
                         </tr>
@@ -37,7 +36,6 @@
                             </td>
                             <td> {{ $value->image_type }}</td>
                             <td> {{ $value->image_size }}</td>
-                            <td> {{ $value->created_at }}</td>
                             <td> {{ $value->updated_at }}</td>
                             <td>
                                 <a class="btn btn-small btn-success btn-sm" href="{{ URL::to('articles/' . $value->id) }}">Show</a>  
