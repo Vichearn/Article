@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Redirect;
 use App\Article;
+use Image;
+use Storage;
 use File;
 use Session;
 
@@ -40,12 +42,21 @@ class ArticlesController extends Controller
             $article = new Article();
             $article->title         = Input::get('title');
             $article->descriptions  = Input::get('descriptions');
-            if(Input::hasFile('image_file')){
-                $file = Input::file('image_file');
+            if($request->hasFile('image_file')){
+                $image = $request->file('image_file');
+                $filename = time() . '.' . $image->getClientOriginalExtension();
+                $location = public_path('images/' . $filename);
+                Image::make($image)->resize(100, 100)->save($location);
+
+                $article->image_file = $filename;
+                $article->image_type = $image->getClientMimeType();
+                $article->image_size = $image->getClientSize();
+                                
+                /*$file = Input::file('image_file');
                 $file->move(public_path(). '/images', $file->getClientOriginalName());
                     $article->image_file = $file->getClientOriginalName();
                     $article->image_type = $file->getClientMimeType();
-                    $article->image_size = $file->getClientSize();
+                    $article->image_size = $file->getClientSize();*/
             }
             $article->created_at  = Input::get('created_at');
             $article->updated_at  = Input::get('updated_at');
@@ -81,22 +92,43 @@ class ArticlesController extends Controller
             return Redirect::to('articles/' . $id . '/edit')
                 ->withErrors($validator);
         } else {
-            $article = Article::find($id);
+            $article = Article::findOrfail($id);
             $article->title         = Input::get('title');
             $article->descriptions  = Input::get('descriptions');
-            if(Input::hasFile('image_file')){
-                $file = Input::file('image_file');
+            File::delete('images/' . $article->image_file);
+            if($request->hasFile('image_file')){
+                $image = $request->file('image_file');
+                $filename = time() . '.' . $image->getClientOriginalExtension();
+                $location = public_path('images/' . $filename);
+                Image::make($image)->resize(100, 100)->save($location);
+
+                $article->image_file = $filename;
+                $article->image_type = $image->getClientMimeType();
+                $article->image_size = $image->getClientSize();
+
+
+                //$oldFilename = $article->image_file;
+                //$article->image_file = $filename;
+                //Storage::delete($oldFilename);
+                
+
+                /*$file = Input::file('image_file');
                 $file->move(public_path(). '/images', $file->getClientOriginalName());
                     $article->image_file = $file->getClientOriginalName();
                     $article->image_type = $file->getClientMimeType();
-                    $article->image_size = $file->getClientSize();
+                    $article->image_size = $file->getClientSize();*/
             }
-            $article->created_at  = Input::get('created_at');
+            $article->created_at  = $article->created_at;
             $article->updated_at  = Input::get('updated_at');
             $article->save();
 
-            Session::flash('message', 'Successfully Created Article!');
+            //$article_update = $request->all();
+            //$article->update($article_update);
+
+            Session::flash('message', 'Successfully Updated Article!');
             return Redirect::to('articles');
+
+
         }
     }
 
