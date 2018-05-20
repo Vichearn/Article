@@ -7,6 +7,14 @@
 
     <div class="jumbotron">
     <table>
+    	<tr>
+			<td>
+				<strong>Image:</strong>
+			</td>
+			<td>
+				<img src="{!! url('/images/'.$article->image_file) !!}" alt="" width="200" height="200">
+			</td>
+		</tr>
 		<tr>
 			<td>
 				<strong>Title:</strong>
@@ -21,14 +29,6 @@
 			</td>
 			<td>
 				{{ $article->descriptions }}
-			</td>
-		</tr>
-		<tr>
-			<td>
-				<strong>Image:</strong>
-			</td>
-			<td>
-				<img src="{!! url('/images/'.$article->image_file) !!}" alt="" width="200" height="200">
 			</td>
 		</tr>
 		<tr>

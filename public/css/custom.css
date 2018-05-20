@@ -1,3 +1,12 @@
 #deleteForm {
 	display: inline-block;
 }
+.pagina{
+    padding: 50px 0;
+    border: 3px solid green;
+    text-align: center;
+    align-items: center;
+}
+.center {
+    vertical-align: middle;
+}

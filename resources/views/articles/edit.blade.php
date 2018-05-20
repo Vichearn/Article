@@ -23,7 +23,7 @@
     <div class="form-group">
         {{ Form::label('image_file', 'Image: ') }}<br />
         <img src="{!! url('/images/'.$article->image_file) !!}" alt="" width="200" height="200"><br /><br />
-        {{ Form::file('image_file', null, array('class' => 'form-control')) }}
+        {{ Form::file('image_file', Input::old('image_file'), array('class' => 'form-control')) }}
     </div>
 
     {{ Form::submit('Edit the Article!', array('class' => 'btn btn-primary')) }}

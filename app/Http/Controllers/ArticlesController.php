@@ -15,10 +15,17 @@ use Session;
 
 class ArticlesController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+    
     public function index()
     {
-        $articles = Article::all();
-        return view('articles.index')->with('articles', $articles);
+        //$articles = Article::all();
+        //return view('articles.index')->with('articles', $articles);
+        $articles = Article::paginate(3);
+        return view('articles.index', compact('articles'));
     }
 
     public function create()
@@ -95,12 +102,13 @@ class ArticlesController extends Controller
             $article = Article::findOrfail($id);
             $article->title         = Input::get('title');
             $article->descriptions  = Input::get('descriptions');
-            File::delete('images/' . $article->image_file);
+            //File::delete('images/' . $article->image_file);
             if($request->hasFile('image_file')){
                 $image = $request->file('image_file');
                 $filename = time() . '.' . $image->getClientOriginalExtension();
                 $location = public_path('images/' . $filename);
                 Image::make($image)->resize(100, 100)->save($location);
+                File::delete('images/' . $article->image_file);
 
                 $article->image_file = $filename;
                 $article->image_type = $image->getClientMimeType();
@@ -117,6 +125,10 @@ class ArticlesController extends Controller
                     $article->image_file = $file->getClientOriginalName();
                     $article->image_type = $file->getClientMimeType();
                     $article->image_size = $file->getClientSize();*/
+            } else {
+                $article->image_file = $article->image_file;
+                $article->image_type = $image->getClientMimeType();
+                $article->image_size = $image->getClientSize();
             }
             $article->created_at  = $article->created_at;
             $article->updated_at  = Input::get('updated_at');
@@ -127,8 +139,6 @@ class ArticlesController extends Controller
 
             Session::flash('message', 'Successfully Updated Article!');
             return Redirect::to('articles');
-
-
         }
     }
 

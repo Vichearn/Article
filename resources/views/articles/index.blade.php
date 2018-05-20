@@ -50,8 +50,8 @@
                             </td>
                         </tr>
                     @endforeach
-                    </tbody>
                 </table>
+                {{ $articles->render() }}
             <button type="button" class="btn btn-dark">
                 <a href="{{ URL::route('articles.create') }}">เพิ่มบทความ</a>
             </button>
