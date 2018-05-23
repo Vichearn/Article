@@ -58,12 +58,6 @@ class ArticlesController extends Controller
                 $article->image_file = $filename;
                 $article->image_type = $image->getClientMimeType();
                 $article->image_size = $image->getClientSize();
-                                
-                /*$file = Input::file('image_file');
-                $file->move(public_path(). '/images', $file->getClientOriginalName());
-                    $article->image_file = $file->getClientOriginalName();
-                    $article->image_type = $file->getClientMimeType();
-                    $article->image_size = $file->getClientSize();*/
             }
             $article->created_at  = Input::get('created_at');
             $article->updated_at  = Input::get('updated_at');
@@ -90,8 +84,7 @@ class ArticlesController extends Controller
     {
         $rules = array(
             'title'         => 'required',
-            'descriptions'  => 'required',
-            'image_file'    => 'required'
+            'descriptions'  => 'required'
         );
         $validator = Validator::make(Input::all(), $rules);
 
@@ -102,7 +95,6 @@ class ArticlesController extends Controller
             $article = Article::findOrfail($id);
             $article->title         = Input::get('title');
             $article->descriptions  = Input::get('descriptions');
-            //File::delete('images/' . $article->image_file);
             if($request->hasFile('image_file')){
                 $image = $request->file('image_file');
                 $filename = time() . '.' . $image->getClientOriginalExtension();
@@ -113,29 +105,10 @@ class ArticlesController extends Controller
                 $article->image_file = $filename;
                 $article->image_type = $image->getClientMimeType();
                 $article->image_size = $image->getClientSize();
-
-
-                //$oldFilename = $article->image_file;
-                //$article->image_file = $filename;
-                //Storage::delete($oldFilename);
-                
-
-                /*$file = Input::file('image_file');
-                $file->move(public_path(). '/images', $file->getClientOriginalName());
-                    $article->image_file = $file->getClientOriginalName();
-                    $article->image_type = $file->getClientMimeType();
-                    $article->image_size = $file->getClientSize();*/
-            } else {
-                $article->image_file = $article->image_file;
-                $article->image_type = $image->getClientMimeType();
-                $article->image_size = $image->getClientSize();
             }
             $article->created_at  = $article->created_at;
             $article->updated_at  = Input::get('updated_at');
             $article->save();
-
-            //$article_update = $request->all();
-            //$article->update($article_update);
 
             Session::flash('message', 'Successfully Updated Article!');
             return Redirect::to('articles');
