@@ -63,10 +63,19 @@
                             </li>
                         @endguest
                     </ul>
+                    <li class="dropdown" style="list-style-type:none">
+                      <a class="dropdown-toggle" id="dropdownLang" data-toggle="dropdown">
+                        {{ Config::get('app.locale') }}
+                        <span class="caret"></span>
+                      </a>
+                      <ul class="dropdown-menu" aria-labelledby="dropdownLang">
+                        <li><a href="{{ URL::to('change/en') }}">ENGLISH</a></li>
+                        <li><a href="{{ URL::to('change/th') }}">THAILAND</a></li>
+                      </ul>
+                    </li>
                 </div>
             </div>
         </nav>
-
         <main class="py-4">
             @yield('content')
         </main>

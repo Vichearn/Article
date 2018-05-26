@@ -9,6 +9,9 @@
                 <div class="card-body">
                     <a href="{{ URL::route('articles.index') }}" class="btn btn-danger">บทความ</a>
                 </div>
+                <div class="card-body">
+                    <div class="intro-lead-in">{{ trans('passwords.reset') }}</div>
+                </div>
             </div>
         </div>
     </div>

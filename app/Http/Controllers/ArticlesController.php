@@ -22,8 +22,6 @@ class ArticlesController extends Controller
     
     public function index()
     {
-        //$articles = Article::all();
-        //return view('articles.index')->with('articles', $articles);
         $articles = Article::paginate(3);
         return view('articles.index', compact('articles'));
     }
